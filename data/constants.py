@@ -2,4 +2,4 @@
 # as explained in the README file here: data/README.md
 
 # do not commit this file with your personal data path
-DATA_FOLDER = ...
+DATA_FOLDER = "data/parquet"  # Path to your 2024 data
