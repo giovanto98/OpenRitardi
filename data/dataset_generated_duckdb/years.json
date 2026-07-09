@@ -1,0 +1,26 @@
+[
+  {
+    "year": 2024,
+    "days_covered": 359,
+    "complete": false,
+    "n_trains": 11233,
+    "n_stations": 1922,
+    "generated_at": "2026-07-09"
+  },
+  {
+    "year": 2025,
+    "days_covered": 365,
+    "complete": true,
+    "n_trains": 14553,
+    "n_stations": 1901,
+    "generated_at": "2026-07-09"
+  },
+  {
+    "year": 2026,
+    "days_covered": 120,
+    "complete": false,
+    "n_trains": 11727,
+    "n_stations": 1569,
+    "generated_at": "2026-07-09"
+  }
+]
