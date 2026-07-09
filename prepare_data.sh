@@ -8,6 +8,15 @@
 #   website/dist/data/<year>/data_train_index.csv
 #   website/dist/data/<year>/trains/<train_id>.csv
 #   website/dist/data/<year>/trains_shapes/<train_id>.csv
+#   website/dist/data/<year>/cancellations_monthly.csv      (optional, Reliability page)
+#   website/dist/data/<year>/cancellations_by_class.csv     (optional, Reliability page)
+#   website/dist/data/<year>/cancellations_top_routes.csv   (optional, Reliability page)
+#
+# The three cancellations_*.csv files are produced unzipped by the DuckDB
+# pipeline, sitting directly in data/dataset_generated_duckdb/<year>/
+# alongside the zips (not inside any of the zips above). They are optional:
+# older per-year datasets may not have them yet, in which case they're simply
+# not copied and the Reliability page renders its empty state for that year.
 #
 # Two source layouts are supported:
 #
@@ -70,6 +79,30 @@ unzip_year_dataset() {
     unzip -o -j "${src_root}/trains_shapes.zip" -d "${out}/trains_shapes"
   else
     echo "prepare_data.sh: WARNING missing ${src_root}/trains_shapes.zip (year ${year})" >&2
+  fi
+
+  copy_cancellation_csvs "${src_root}" "${out}" "${year}"
+}
+
+# Copies the (optional) cancellations_*.csv trio straight across -- they
+# arrive unzipped from the DuckDB pipeline, so no unzip step is needed.
+# Missing files are not an error: the Reliability page degrades gracefully
+# to an empty state when they're absent for a given year.
+copy_cancellation_csvs() {
+  local src_root="$1"
+  local out="$2"
+  local year="$3"
+  local found=0
+
+  for f in cancellations_monthly.csv cancellations_by_class.csv cancellations_top_routes.csv; do
+    if [ -f "${src_root}/${f}" ]; then
+      cp "${src_root}/${f}" "${out}/${f}"
+      found=1
+    fi
+  done
+
+  if [ "${found}" -eq 0 ]; then
+    echo "prepare_data.sh: no cancellations_*.csv found in ${src_root} (year ${year}) -- Reliability page will show its empty state for this year" >&2
   fi
 }
 

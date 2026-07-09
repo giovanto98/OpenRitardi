@@ -81,7 +81,11 @@
         if (y.complete) {
             return String(y.year);
         }
-        return y.year + " (" + coverageLabel(y.year, y.days_covered) + ")";
+        return y.year + " · " + coverageLabel(y.year, y.days_covered);
+    }
+
+    function isItalian() {
+        return (document.documentElement.lang || "").toLowerCase().startsWith("it");
     }
 
     // Kick off resolution immediately (module load time), so it runs in
@@ -113,13 +117,59 @@
             });
     })();
 
+    var SCROLL_STORAGE_KEY = "or_scroll_restore";
+
     function setYearAndReload(year) {
         storeYear(year);
+        try {
+            // The picker causes a full page reload (simplest, most robust
+            // option -- every data script just re-reads window.OR_YEAR from
+            // scratch). Stash the scroll offset so the reload doesn't dump
+            // the reader back at the top of a long page.
+            window.sessionStorage.setItem(SCROLL_STORAGE_KEY, String(window.scrollY));
+        } catch (e) {
+            // sessionStorage unavailable -- not fatal, reload just starts at the top
+        }
         var url = new URL(window.location.href);
         url.searchParams.set("year", year);
         window.location.href = url.toString();
     }
 
+    /**
+     * Restores the scroll position saved (if any) by setYearAndReload, once
+     * the new page has finished its initial layout. Data-driven sections
+     * (charts, maps, tables) render asynchronously after OR_YEAR_READY, so
+     * this waits a couple of animation frames before scrolling -- enough for
+     * the static layout (headline tiles, card shells, empty tbodies) to have
+     * taken its final height without needing to wait on every fetch.
+     */
+    function restoreScrollPosition() {
+        var stored;
+        try {
+            stored = window.sessionStorage.getItem(SCROLL_STORAGE_KEY);
+            if (stored !== null) {
+                window.sessionStorage.removeItem(SCROLL_STORAGE_KEY);
+            }
+        } catch (e) {
+            return;
+        }
+        if (stored === null) {
+            return;
+        }
+        var targetY = Number(stored);
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                window.scrollTo(0, targetY);
+            });
+        });
+    }
+
+    /**
+     * Renders the year picker as a compact segmented control (a UIkit
+     * button-group) when there are few years to choose from -- the common
+     * case -- falling back to a <select> once the list grows past what
+     * reads well as buttons (also more forgiving for touch/offcanvas use).
+     */
     function renderPickers(state) {
         var mounts = document.querySelectorAll(".or-year-picker-mount");
         if (mounts.length === 0) {
@@ -133,31 +183,84 @@
             years = [{ year: state.year, complete: true }];
         }
 
+        var ariaLabel = isItalian() ? "Anno" : "Year";
+        var useSegmentedControl = years.length <= 5;
+
         mounts.forEach(function (mount) {
-            var select = document.createElement("select");
-            select.className = "uk-select or-year-select";
-            select.setAttribute("aria-label", "Year");
-
-            years.forEach(function (y) {
-                var option = document.createElement("option");
-                option.value = y.year;
-                option.textContent = yearOptionLabel(y);
-                if (String(y.year) === String(state.year)) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            });
-
-            select.addEventListener("change", function () {
-                setYearAndReload(select.value);
-            });
-
             mount.innerHTML = "";
-            mount.appendChild(select);
+
+            if (useSegmentedControl) {
+                var group = document.createElement("div");
+                group.className = "uk-button-group or-year-picker";
+                group.setAttribute("role", "group");
+                group.setAttribute("aria-label", ariaLabel);
+                group.style.flexWrap = "wrap";
+
+                years.forEach(function (y) {
+                    var isSelected = String(y.year) === String(state.year);
+                    var btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "uk-button uk-button-small " +
+                        (isSelected ? "uk-button-primary" : "uk-button-default");
+                    btn.setAttribute("aria-pressed", isSelected ? "true" : "false");
+                    btn.textContent = yearOptionLabel(y);
+                    btn.addEventListener("click", function () {
+                        if (!isSelected) {
+                            setYearAndReload(String(y.year));
+                        }
+                    });
+                    group.appendChild(btn);
+                });
+
+                mount.appendChild(group);
+            } else {
+                var select = document.createElement("select");
+                select.className = "uk-select or-year-select";
+                select.setAttribute("aria-label", ariaLabel);
+
+                years.forEach(function (y) {
+                    var option = document.createElement("option");
+                    option.value = y.year;
+                    option.textContent = yearOptionLabel(y);
+                    if (String(y.year) === String(state.year)) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+
+                select.addEventListener("change", function () {
+                    setYearAndReload(select.value);
+                });
+
+                mount.appendChild(select);
+            }
         });
     }
 
+    /**
+     * Fills every `.or-year-note-mount` span (used inline in translated copy
+     * that used to hardcode a specific year, e.g. "data shown is from 2023")
+     * with the resolved year, plus its completeness label when partial.
+     */
+    function renderYearNotes(state) {
+        var mounts = document.querySelectorAll(".or-year-note-mount");
+        if (mounts.length === 0) {
+            return;
+        }
+        var years = state.years || [];
+        var entry = years.filter(function (y) { return String(y.year) === String(state.year); })[0];
+        var label = (entry && !entry.complete)
+            ? state.year + " (" + coverageLabel(state.year, entry.days_covered) + ")"
+            : String(state.year);
+
+        mounts.forEach(function (mount) { mount.textContent = label; });
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
-        window.OR_YEAR_READY.then(renderPickers);
+        window.OR_YEAR_READY.then(function (state) {
+            renderPickers(state);
+            renderYearNotes(state);
+        });
+        restoreScrollPosition();
     });
 })();

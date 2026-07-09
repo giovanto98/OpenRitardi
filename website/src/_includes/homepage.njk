@@ -57,6 +57,18 @@
 
 
             </div>
+
+            <div class="uk-margin-small" id="compare-years-control">
+                <label class="uk-form-label">
+                    <input class="uk-checkbox" type="checkbox" id="compare-years-toggle">
+                    {{ "compare.toggle_label" | i18n }}
+                </label>
+                <span id="compare-year-b-container" style="display:none; margin-left:8px">
+                    <span style="font-size:90%">{{ "compare.year_b_label" | i18n }}</span>
+                    <span class="or-compare-year-b-mount" style="display:inline-block"></span>
+                </span>
+            </div>
+
             <h4>{{ "homepage.filters.search_label" | i18n }}</h4>
             <div>
                 <form class="uk-search uk-search-default uk-width-medium uk-margin-large " id="search-station"
@@ -113,4 +125,5 @@
 
 <script src="{{ '/js/autocomplete.js' | url }}" type="text/javascript"></script>
 <script src="{{ '/libraries/maps/legend.js' | url }}" type="text/javascript"></script>
+<script src="{{ '/js/compare-utils.js' | url }}" type="text/javascript"></script>
 <script src="{{ '/js/stations_map_mapbox.js' | url }}" type="text/javascript"></script>

@@ -58,7 +58,9 @@ function getFileName(day, trainType) {
  */
 var station_data = []
 
-window.OR_YEAR_READY.then(function () {
+window.OR_YEAR_READY.then(function (state) {
+
+  setupCompareControls(state.years, state.year);
 
   d3.select("#form-horizontal-select-day").on("change", function (d) {
     var selectedOptionDay = d3.select(this).property("value")
@@ -398,4 +400,198 @@ function plotDots(data) {
     .style("font-size", 10)
     .attr('alignment-baseline', 'middle')
 
+}
+
+/**
+ * ---- Compare years mode ----
+ *
+ * Colors stations by the delta in avg_arrival_delay between two years
+ * (year B minus year A) instead of by the absolute delay. Always compares
+ * the full, unfiltered data_stop.csv for both years -- the day/train-type
+ * filters above don't have a clean equivalent notion of "the same slice"
+ * once you're crossing two different years' calendars, so compare mode
+ * intentionally ignores them.
+ */
+function hasCoords(d) {
+  return d.stop_lat && d.stop_lon && d.stop_lat !== "" && d.stop_lon !== "";
+}
+
+function stationCompareTooltipHtml(stopName, delayA, delayB, yearA, yearB) {
+  var delta = delayB - delayA;
+  var deltaStr = (delta >= 0 ? "+" : "") + (Math.round(delta * 10) / 10);
+  return '<div class="uk-text-lead" style="width: 260px">' +
+    '<span style="text-align:center"><b>' + stopName + '</b></span><br/>' +
+    yearA + ': ' + (Math.round(delayA * 10) / 10) + ' min<br/>' +
+    yearB + ': ' + (Math.round(delayB * 10) / 10) + ' min<br/>' +
+    'Δ: <span style="color:' + window.OR_Compare.deltaColormap(delta) + '">' + deltaStr + ' min</span>' +
+    '</div>';
+}
+
+function stationOnlyTooltipHtml(stopName, delay, year) {
+  return '<div class="uk-text-lead" style="width: 220px">' +
+    '<span style="text-align:center"><b>' + stopName + '</b></span><br/>' +
+    year + ' only: ' + (Math.round(delay * 10) / 10) + ' min</div>';
+}
+
+function plotCompareDots(joined, yearA, yearB) {
+  if (!mapHasLoaded) {
+    setTimeout(function () { plotCompareDots(joined, yearA, yearB); }, 200);
+    return;
+  }
+
+  var rows = joined.shared.map(function (pair) {
+    return {
+      stop_lat: pair.a.stop_lat,
+      stop_lon: pair.a.stop_lon,
+      count_stops: pair.a.count_stops,
+      color: window.OR_Compare.deltaColormap(Number(pair.b.avg_arrival_delay) - Number(pair.a.avg_arrival_delay)),
+      html: stationCompareTooltipHtml(pair.key, Number(pair.a.avg_arrival_delay), Number(pair.b.avg_arrival_delay), yearA, yearB)
+    };
+  }).concat(joined.onlyA.filter(hasCoords).map(function (s) {
+    return {
+      stop_lat: s.stop_lat, stop_lon: s.stop_lon, count_stops: s.count_stops,
+      color: window.OR_Compare.NEUTRAL_COLOR,
+      html: stationOnlyTooltipHtml(s.stop_name, Number(s.avg_arrival_delay), yearA)
+    };
+  })).concat(joined.onlyB.filter(hasCoords).map(function (s) {
+    return {
+      stop_lat: s.stop_lat, stop_lon: s.stop_lon, count_stops: s.count_stops,
+      color: window.OR_Compare.NEUTRAL_COLOR,
+      html: stationOnlyTooltipHtml(s.stop_name, Number(s.avg_arrival_delay), yearB)
+    };
+  }));
+
+  var scale3 = d3.scaleQuantile()
+    .domain(rows.map(function (d) { return Number(d.count_stops); }))
+    .range([3, 5, 5, 5, 5, 5, 5, 5, 7, 7, 10, 15]);
+
+  if (map.getLayer('circles')) map.removeLayer('circles');
+  if (map.getSource('circles-source')) map.removeSource('circles-source');
+
+  var idCounter = 0;
+  map.addSource('circles-source', {
+    type: 'geojson',
+    data: {
+      type: 'FeatureCollection',
+      features: rows.map(function (d) {
+        return {
+          type: 'Feature',
+          id: idCounter++,
+          geometry: { type: 'Point', coordinates: [Number(d.stop_lon), Number(d.stop_lat)] },
+          properties: { color: d.color, radius: scale3(Number(d.count_stops)), html: d.html }
+        };
+      })
+    }
+  });
+
+  map.addLayer({
+    id: 'circles',
+    type: 'circle',
+    source: 'circles-source',
+    paint: {
+      'circle-radius': [
+        "interpolate", ["linear"], ["zoom"],
+        7, ["*", 1.2, ["get", "radius"]],
+        15, ["*", 4, ["get", "radius"]]
+      ],
+      'circle-opacity': 0.8,
+      'circle-color': ['get', 'color'],
+      'circle-stroke-color': 'white',
+      'circle-stroke-width': 1
+    }
+  });
+
+  var popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false });
+  map.on('mousemove', 'circles', function (e) {
+    if (e.features.length === 0) return;
+    map.getCanvas().style.cursor = 'pointer';
+    popup.setLngLat(e.lngLat).setHTML(e.features[0].properties.html).setMaxWidth("280px").addTo(map);
+  });
+  map.on('mouseleave', 'circles', function () {
+    map.getCanvas().style.cursor = '';
+    popup.remove();
+  });
+
+  var deltaLegend = Legend(window.OR_Compare.deltaColormap, {
+    title: "Δ avg delay (min), " + yearB + " vs " + yearA
+  });
+  d3.select("#legend").html("").append("div").html(deltaLegend.outerHTML);
+}
+
+function loadCompareDataAndRender(yearB) {
+  var yearA = window.OR_YEAR;
+  Promise.all([
+    d3.csv(window.OR_BASE + "data/" + yearA + "/data_stop.csv"),
+    d3.csv(window.OR_BASE + "data/" + yearB + "/data_stop.csv")
+  ]).then(function (results) {
+    var dataA = results[0].filter(hasCoords);
+    var dataB = results[1].filter(hasCoords);
+    var joined = window.OR_Compare.joinByKey(dataA, dataB, "stop_name");
+    plotCompareDots(joined, yearA, yearB);
+  });
+}
+
+function exitCompareMode() {
+  d3.selectAll("#map circle").remove();
+  legend = Legend(colormap.range(colormap.range().slice(1))
+    .domain(colormap.domain().slice(1)), { title: "Average delay (min)" });
+  d3.select("#legend").html("").append("div").attr("width", "100%").attr("height", "100%").html(legend.outerHTML);
+  if (station_data.length > 0) {
+    plotDots(station_data);
+  }
+}
+
+function setupCompareControls(years, yearA) {
+  var toggle = document.getElementById('compare-years-toggle');
+  var containerB = document.getElementById('compare-year-b-container');
+  var mountB = document.querySelector('.or-compare-year-b-mount');
+  if (!toggle || !mountB) return;
+
+  var otherYears = (years || []).slice()
+    .filter(function (y) { return String(y.year) !== String(yearA); })
+    .sort(function (a, b) { return Number(b.year) - Number(a.year); });
+
+  if (otherYears.length === 0) {
+    toggle.disabled = true;
+    return;
+  }
+
+  var select = document.createElement('select');
+  select.className = 'uk-select uk-select-small';
+  select.id = 'compare-year-b-select';
+  otherYears.forEach(function (y) {
+    var opt = document.createElement('option');
+    opt.value = y.year;
+    opt.textContent = y.year;
+    select.appendChild(opt);
+  });
+  mountB.innerHTML = '';
+  mountB.appendChild(select);
+
+  var urlCompareYear = window.OR_Compare.readCompareYearFromUrl();
+  var validUrlYear = urlCompareYear && otherYears.some(function (y) { return String(y.year) === urlCompareYear; });
+  select.value = validUrlYear ? urlCompareYear : String(otherYears[0].year);
+
+  function activate() {
+    containerB.style.display = 'inline';
+    window.OR_Compare.setCompareYearInUrl(select.value);
+    loadCompareDataAndRender(select.value);
+  }
+  function deactivate() {
+    containerB.style.display = 'none';
+    window.OR_Compare.setCompareYearInUrl(null);
+    exitCompareMode();
+  }
+
+  toggle.addEventListener('change', function () {
+    if (toggle.checked) activate(); else deactivate();
+  });
+  select.addEventListener('change', function () {
+    if (toggle.checked) activate();
+  });
+
+  if (validUrlYear) {
+    toggle.checked = true;
+    activate();
+  }
 }

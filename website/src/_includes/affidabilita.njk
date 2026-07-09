@@ -1,0 +1,107 @@
+{% include 'template/header.njk' %}
+<!-- CONTENT -->
+<div class="uk-container uk-container-large uk-margin-large">
+    <h1>{{ "affidabilita.title" | i18n }}</h1>
+    <div class="uk-container uk-container-small uk-margin-remove-left" style="margin-left:0">
+        <p class="uk-text-justify">{{ "affidabilita.intro" | i18n | safe }}</p>
+    </div>
+
+    <!-- Empty state: shown when the selected year has no cancellations dataset yet -->
+    <div id="affidabilita-empty-state" class="uk-alert uk-alert-warning" uk-alert style="display:none">
+        <p>{{ "affidabilita.no_data_for_year" | i18n }}</p>
+    </div>
+
+    <div id="affidabilita-content" style="display:none">
+
+        <!-- Headline stat tiles -->
+        <div uk-grid class="uk-child-width-1-3@s uk-grid-match uk-margin" id="affidabilita-tiles">
+            <div>
+                <div class="uk-text-center uk-card uk-card-default uk-card-body">
+                    <span class="uk-h1 uk-margin-small" id="affidabilita-tile-n-trains">-</span>
+                    <div class="uk-h4 uk-margin-small">{{ "affidabilita.tile_n_trains" | i18n }}</div>
+                </div>
+            </div>
+            <div>
+                <div class="uk-text-center uk-card uk-card-default uk-card-body">
+                    <span class="uk-h1 uk-margin-small" id="affidabilita-tile-perc-cancelled">-</span>
+                    <div class="uk-h4 uk-margin-small">{{ "affidabilita.tile_perc_cancelled" | i18n }}</div>
+                </div>
+            </div>
+            <div>
+                <div class="uk-text-center uk-card uk-card-default uk-card-body">
+                    <span class="uk-h1 uk-margin-small" id="affidabilita-tile-perc-rescheduled">-</span>
+                    <div class="uk-h4 uk-margin-small">{{ "affidabilita.tile_perc_rescheduled" | i18n }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly chart -->
+        <div class="uk-margin">
+            <div class="uk-card uk-card-default uk-card-body">
+                <h3 class="uk-card-title">{{ "affidabilita.chart_title" | i18n }}</h3>
+                <div id="affidabilita-monthly-chart" style="width:100%; min-height:340px;"></div>
+            </div>
+        </div>
+
+        <!-- By-class table -->
+        <div class="uk-margin">
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-header">
+                    <h3 class="uk-card-title">{{ "affidabilita.by_class_title" | i18n }}</h3>
+                </div>
+                <div class="uk-card-body">
+                    <div class="uk-overflow-auto">
+                        <table class="uk-table uk-table-divider uk-table-hover uk-table-small ot-ranking-table">
+                            <thead>
+                                <tr>
+                                    <th>{{ "affidabilita.col_class" | i18n }}</th>
+                                    <th class="affidabilita-sortable-class" data-sort-key="n_trains" style="cursor:pointer">{{ "affidabilita.col_n_trains" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span></th>
+                                    <th class="affidabilita-sortable-class" data-sort-key="n_cancelled" style="cursor:pointer">{{ "affidabilita.col_n_cancelled" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span></th>
+                                    <th class="affidabilita-sortable-class" data-sort-key="n_rescheduled" style="cursor:pointer">{{ "affidabilita.col_n_rescheduled" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span></th>
+                                    <th class="affidabilita-sortable-class" data-sort-key="perc_cancelled" style="cursor:pointer">{{ "affidabilita.col_perc_cancelled" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span></th>
+                                    <th class="affidabilita-sortable-class" data-sort-key="perc_rescheduled" style="cursor:pointer">{{ "affidabilita.col_perc_rescheduled" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="affidabilita-by-class-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top routes table -->
+        <div class="uk-margin">
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-header">
+                    <h3 class="uk-card-title">{{ "affidabilita.top_routes_title" | i18n }}</h3>
+                </div>
+                <div class="uk-card-body">
+                    <div class="uk-overflow-auto">
+                        <table class="uk-table uk-table-divider uk-table-hover uk-table-small ot-ranking-table">
+                            <thead>
+                                <tr>
+                                    <th>{{ "affidabilita.col_class" | i18n }}</th>
+                                    <th width="20%">{{ "global.train_number" | i18n }}</th>
+                                    <th>{{ "affidabilita.col_route" | i18n }}</th>
+                                    <th class="affidabilita-sortable-routes" data-sort-key="n_days_planned" style="cursor:pointer">{{ "affidabilita.col_n_days_planned" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span></th>
+                                    <th class="affidabilita-sortable-routes" data-sort-key="n_cancelled" style="cursor:pointer">{{ "affidabilita.col_n_cancelled" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span></th>
+                                    <th class="affidabilita-sortable-routes" data-sort-key="perc_cancelled" style="cursor:pointer">{{ "affidabilita.col_perc_cancelled" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="affidabilita-top-routes-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mandatory footnotes -->
+        <div class="uk-container uk-container-small uk-margin-remove-left uk-margin-top" style="margin-left:0">
+            <p class="uk-text-meta">{{ "affidabilita.footnote_icn" | i18n | safe }}</p>
+            <p class="uk-text-meta">{{ "affidabilita.footnote_survivorship" | i18n | safe }}</p>
+        </div>
+
+    </div>
+</div>
+
+<script src="{{ '/js/affidabilita.js' | url }}" type="text/javascript"></script>

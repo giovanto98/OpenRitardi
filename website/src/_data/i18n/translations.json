@@ -92,8 +92,8 @@
             "it": "Ritardi medi dei treni"
         },
         "box_content": {
-            "en": "This map shows the average delay of trains at each Italian station.<br> The size of the dot reflects the number of trains that go through each station every day, and the color gives an instant idea on the performance of each station. <br><b>Note: this project is still under development and data shown is from 2023</b>.",
-            "it": "Questa mappa mostra il ritardo medio dei treni in ogni stazione italiana.<br>La dimensione del punto riflette il numero di treni che transitano in ogni stazione ogni giorno, mentre il colore mostrato è in base al ritardo di ogni stazione.<br><b>Nota: questo progetto è ancora in fase di sviluppo e i dati riportati si riferiscono al 2023.</b>"
+            "en": "This map shows the average delay of trains at each Italian station.<br> The size of the dot reflects the number of trains that go through each station every day, and the color gives an instant idea on the performance of each station. <br><b>Note: this project is still under development. Data shown refers to <span class=\"or-year-note-mount\">the selected year</span>.</b>",
+            "it": "Questa mappa mostra il ritardo medio dei treni in ogni stazione italiana.<br>La dimensione del punto riflette il numero di treni che transitano in ogni stazione ogni giorno, mentre il colore mostrato è in base al ritardo di ogni stazione.<br><b>Nota: questo progetto è ancora in fase di sviluppo. I dati riportati si riferiscono a <span class=\"or-year-note-mount\">l'anno selezionato</span>.</b>"
         },
         "filters": {
             "label": {
@@ -124,8 +124,8 @@
             "it": "Statistiche"
         },
         "description": {
-            "en": "<b>Note: this project is still under development and data shown is from 2023.</b>",
-            "it": "<b>Nota: questo progetto è ancora in fase di sviluppo e i dati riportati si riferiscono al 2023.</b>"
+            "en": "<b>Note: this project is still under development. Data shown refers to <span class=\"or-year-note-mount\">the selected year</span>.</b>",
+            "it": "<b>Nota: questo progetto è ancora in fase di sviluppo. I dati mostrati si riferiscono a <span class=\"or-year-note-mount\">l'anno selezionato</span>.</b>"
         },
         "worst_trains": {
             "en": "Worst trains",
@@ -176,8 +176,8 @@
             "it": "Cerca un treno"
         },
         "description": {
-            "en": "Here you can search a train and obtain information on its historical delays. Type in the search box your train number (i.e. IC 655)<br><b>Note: this project is still under development and data shown is from 2023.</b>",
-            "it": "Qui puoi cercare un treno e ottenere informazioni sui suoi ritardi passati. Digita il numero di un treno (es. IC 655)<br><b>Nota: questo progetto è ancora in fase di sviluppo e i dati riportati si riferiscono al 2023.</b>"
+            "en": "Here you can search a train and obtain information on its historical delays. Type in the search box your train number (i.e. IC 655)<br><b>Note: this project is still under development. Data shown refers to <span class=\"or-year-note-mount\">the selected year</span>.</b>",
+            "it": "Qui puoi cercare un treno e ottenere informazioni sui suoi ritardi passati. Digita il numero di un treno (es. IC 655)<br><b>Nota: questo progetto è ancora in fase di sviluppo. I dati riportati si riferiscono a <span class=\"or-year-note-mount\">l'anno selezionato</span>.</b>"
         },
         "avg_delay_per_stop": {
             "en": "Average delay per stop",
@@ -240,6 +240,114 @@
         "no_data_for_year": {
             "en": "No ICN data available for this year.",
             "it": "Nessun dato ICN disponibile per questo anno."
+        }
+    },
+    "affidabilita": {
+        "menu_item": {
+            "en": "Reliability",
+            "it": "Affidabilità"
+        },
+        "head_title": {
+            "en": "Reliability - cancelled and rescheduled trains",
+            "it": "Affidabilità - treni cancellati e reinstradati"
+        },
+        "title": {
+            "en": "Reliability",
+            "it": "Affidabilità"
+        },
+        "intro": {
+            "en": "Beyond delays, a train can simply not run at all (cancelled) or be diverted onto a different route (rescheduled). This page tracks how often that happens, using the same open dataset as the rest of OpenRitardi.",
+            "it": "Oltre ai ritardi, un treno può non circolare affatto (cancellato) oppure essere reinstradato su un percorso diverso (reinstradato). Questa pagina monitora la frequenza di questi eventi, usando lo stesso dataset aperto del resto di OpenRitardi."
+        },
+        "tile_perc_cancelled": {
+            "en": "Cancelled",
+            "it": "Cancellati"
+        },
+        "tile_perc_rescheduled": {
+            "en": "Rescheduled",
+            "it": "Reinstradati"
+        },
+        "tile_n_trains": {
+            "en": "Planned trains",
+            "it": "Treni pianificati"
+        },
+        "chart_title": {
+            "en": "Cancellations and rescheduling by month",
+            "it": "Cancellazioni e reinstradamenti per mese"
+        },
+        "by_class_title": {
+            "en": "By train class",
+            "it": "Per classe di treno"
+        },
+        "top_routes_title": {
+            "en": "Most affected routes",
+            "it": "Percorsi più colpiti"
+        },
+        "col_class": {
+            "en": "Class",
+            "it": "Classe"
+        },
+        "col_route": {
+            "en": "Route",
+            "it": "Percorso"
+        },
+        "col_n_trains": {
+            "en": "Planned trains",
+            "it": "Treni pianificati"
+        },
+        "col_n_days_planned": {
+            "en": "Days planned",
+            "it": "Giorni pianificati"
+        },
+        "col_n_cancelled": {
+            "en": "Cancelled",
+            "it": "Cancellati"
+        },
+        "col_n_rescheduled": {
+            "en": "Rescheduled",
+            "it": "Reinstradati"
+        },
+        "col_perc_cancelled": {
+            "en": "% cancelled",
+            "it": "% cancellati"
+        },
+        "col_perc_rescheduled": {
+            "en": "% rescheduled",
+            "it": "% reinstradati"
+        },
+        "footnote_icn": {
+            "en": "<b>Night trains (ICN) are excluded from this page:</b> the data feed does not report their cancellations or rescheduling. This is a gap in the source data, not a claim that ICN trains are never cancelled — see the <a href=\"notte.html\">Intercity Notte page</a> for their delay statistics.",
+            "it": "<b>I treni notturni (ICN) sono esclusi da questa pagina:</b> il flusso dati non riporta le loro cancellazioni o i reinstradamenti. Si tratta di una lacuna nei dati sorgente, non di un'affermazione che i treni ICN non vengano mai cancellati: per le loro statistiche di ritardo vedi la <a href=\"notte.html\">pagina Intercity Notte</a>."
+        },
+        "footnote_survivorship": {
+            "en": "<b>Survivorship note:</b> cancelled trains are excluded from the delay statistics shown elsewhere on this site, since a cancelled train has no arrival delay to record. Those figures describe only the trains that actually ran.",
+            "it": "<b>Nota sul survivorship bias:</b> i treni cancellati sono esclusi dalle statistiche di ritardo mostrate nel resto del sito, poiché un treno cancellato non ha un ritardo di arrivo da registrare. Quei dati descrivono quindi solo i treni che sono effettivamente circolati."
+        },
+        "no_data_for_year": {
+            "en": "Reliability data is not available for this year yet.",
+            "it": "I dati di affidabilità non sono ancora disponibili per questo anno."
+        }
+    },
+    "compare": {
+        "toggle_label": {
+            "en": "Compare years",
+            "it": "Confronta anni"
+        },
+        "year_b_label": {
+            "en": "compare with",
+            "it": "confronta con"
+        },
+        "delta_col": {
+            "en": "Δ delay",
+            "it": "Δ ritardo"
+        },
+        "only_in_prefix": {
+            "en": "Only in",
+            "it": "Solo in"
+        },
+        "no_stations_in_common": {
+            "en": "No stations in common between the two years.",
+            "it": "Nessuna stazione in comune tra i due anni."
         }
     },
     "about": {

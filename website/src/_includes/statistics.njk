@@ -3,6 +3,47 @@
 <div class="uk-container uk-container-large uk-margin-large">
     <h1>{{ "statistics.title" | i18n }}</h1>
     <p>{{ "statistics.description" | i18n | safe}}</p>
+
+    <!-- Compare years -->
+    <div class="uk-margin">
+        <div class="uk-card uk-card-default uk-card-body">
+            <div class="uk-flex uk-flex-middle uk-flex-wrap" uk-grid>
+                <div>
+                    <label class="uk-form-label">
+                        <input class="uk-checkbox" type="checkbox" id="stats-compare-toggle">
+                        {{ "compare.toggle_label" | i18n }}
+                    </label>
+                </div>
+                <div id="stats-compare-year-b-container" style="display:none">
+                    <span style="font-size:90%">{{ "compare.year_b_label" | i18n }}</span>
+                    <span class="or-compare-year-b-mount" style="display:inline-block"></span>
+                </div>
+            </div>
+            <div id="stats-compare-summary" class="uk-margin-small-top uk-text-meta" style="display:none"
+                data-only-in-prefix="{{ 'compare.only_in_prefix' | i18n }}"></div>
+            <div id="stats-compare-table-container" style="display:none" class="uk-margin-small-top uk-overflow-auto">
+                <table class="uk-table uk-table-divider uk-table-hover uk-table-small ot-ranking-table">
+                    <thead>
+                        <tr>
+                            <th>{{ "global.train_number" | i18n }}</th>
+                            <th>{{ "global.destination" | i18n }}</th>
+                            <th class="stats-compare-sortable" data-sort-key="delayA" style="cursor:pointer">
+                                <span class="or-compare-year-a-label"></span> <span uk-icon="icon: triangle-down; ratio: 0.6"></span>
+                            </th>
+                            <th class="stats-compare-sortable" data-sort-key="delayB" style="cursor:pointer">
+                                <span class="or-compare-year-b-label"></span> <span uk-icon="icon: triangle-down; ratio: 0.6"></span>
+                            </th>
+                            <th class="stats-compare-sortable" data-sort-key="delta" style="cursor:pointer">
+                                {{ "compare.delta_col" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="stats-compare-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Lorem ipsum -->
     <div uk-grid class="uk-grid-match uk-child-width-1-2@m">
         <!-- Worst trains -->
@@ -172,6 +213,7 @@
     </div>
 </div>
 
+<script src="{{ '/js/compare-utils.js' | url }}" type="text/javascript"></script>
 <script src="{{ '/js/statistics.js' | url }}" type="text/javascript"></script>
 <script src="{{ '/libraries/maps/legend.js' | url }}" type="text/javascript"></script>
 <script src="{{ '/js/regional-differences.js' | url }}" type="text/javascript"></script>
