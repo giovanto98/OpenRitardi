@@ -56,77 +56,81 @@ function getFileName(day, trainType) {
  * USER INTERACTION WITH FORM
  * 
  */
-d3.select("#form-horizontal-select-day").on("change", function (d) {
-  var selectedOptionDay = d3.select(this).property("value")
-  var selectedOptionTrainType = d3.select("#form-horizontal-select-trainType").property("value")
-  var dataset = getFileName(selectedOptionDay, selectedOptionTrainType)
-  var data_stop = d3.csv(window.OR_BASE + "data/" + dataset, function (d) {
-    return d;
-  })
-  Promise.all([data_stop]).then(results => {
-    let station_data = results[0];
-    console.log(station_data)
-    d3.selectAll("circle").remove();
-    plotDots(station_data);
-  })
-})
-
-d3.select("#form-horizontal-select-trainType").on("change", function (d) {
-  var selectedOptionTrainType = d3.select(this).property("value")
-  var selectedOptionDay = d3.select("#form-horizontal-select-day").property("value")
-  var dataset = getFileName(selectedOptionDay, selectedOptionTrainType)
-  var data_stop = d3.csv(window.OR_BASE + "data/" + dataset, function (d) {
-    return d;
-  })
-  Promise.all([data_stop]).then(results => {
-    let station_data = results[0];
-    console.log(station_data)
-    d3.selectAll("circle").remove();
-    plotDots(station_data);
-  })
-})
-
-//default dataset, before the user chooses anything
-var dayChosen = document.getElementById("form-horizontal-select-day").value
-var trainTypeChosen = document.getElementById("form-horizontal-select-trainType").value
-var dataset = getFileName(dayChosen, trainTypeChosen)
-
-var data_stop = d3.csv(window.OR_BASE + "data/" + dataset, function (d) {
-  return d;
-})
-
 var station_data = []
 
-Promise.all([data_stop]).then(results => {
-  station_data = results[0];
-  // filter out stations without coordinates
-  station_data = station_data.filter(d => d.stop_lat != "" && d.stop_lon != "")
+window.OR_YEAR_READY.then(function () {
 
-  // sort stations on count_trains
-  station_data = station_data.sort((a, b) => b.count_stops - a.count_stops)
+  d3.select("#form-horizontal-select-day").on("change", function (d) {
+    var selectedOptionDay = d3.select(this).property("value")
+    var selectedOptionTrainType = d3.select("#form-horizontal-select-trainType").property("value")
+    var dataset = getFileName(selectedOptionDay, selectedOptionTrainType)
+    var data_stop = d3.csv(window.OR_BASE + "data/" + window.OR_YEAR + "/" + dataset, function (d) {
+      return d;
+    })
+    Promise.all([data_stop]).then(results => {
+      let station_data = results[0];
+      console.log(station_data)
+      d3.selectAll("circle").remove();
+      plotDots(station_data);
+    })
+  })
 
-  // augment the dataset with an ID
-  // we need an ID for each stop in order to be able to remove the popup when the user hovers out
-  let id = 0
-  station_data = station_data.map(d => {
-    d.id = id
-    id += 1
-    return d
-  });
+  d3.select("#form-horizontal-select-trainType").on("change", function (d) {
+    var selectedOptionTrainType = d3.select(this).property("value")
+    var selectedOptionDay = d3.select("#form-horizontal-select-day").property("value")
+    var dataset = getFileName(selectedOptionDay, selectedOptionTrainType)
+    var data_stop = d3.csv(window.OR_BASE + "data/" + window.OR_YEAR + "/" + dataset, function (d) {
+      return d;
+    })
+    Promise.all([data_stop]).then(results => {
+      let station_data = results[0];
+      console.log(station_data)
+      d3.selectAll("circle").remove();
+      plotDots(station_data);
+    })
+  })
 
-  console.log(station_data)
-  plotDots(station_data);
-  populate_dropdown_from_dataset(station_data);
+  //default dataset, before the user chooses anything
+  var dayChosen = document.getElementById("form-horizontal-select-day").value
+  var trainTypeChosen = document.getElementById("form-horizontal-select-trainType").value
+  var dataset = getFileName(dayChosen, trainTypeChosen)
 
-  // if there's a stop_name specified in the url, open the popup
-  let urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.has('stop_name')) {
-    let stop_name = urlParams.get('stop_name');
-    let stop = station_data.filter(d => d.stop_name == stop_name)[0];
-    let id = stop.id;
-    displayStation(id)
-  }
-})
+  var data_stop = d3.csv(window.OR_BASE + "data/" + window.OR_YEAR + "/" + dataset, function (d) {
+    return d;
+  })
+
+  Promise.all([data_stop]).then(results => {
+    station_data = results[0];
+    // filter out stations without coordinates
+    station_data = station_data.filter(d => d.stop_lat != "" && d.stop_lon != "")
+
+    // sort stations on count_trains
+    station_data = station_data.sort((a, b) => b.count_stops - a.count_stops)
+
+    // augment the dataset with an ID
+    // we need an ID for each stop in order to be able to remove the popup when the user hovers out
+    let id = 0
+    station_data = station_data.map(d => {
+      d.id = id
+      id += 1
+      return d
+    });
+
+    console.log(station_data)
+    plotDots(station_data);
+    populate_dropdown_from_dataset(station_data);
+
+    // if there's a stop_name specified in the url, open the popup
+    let urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('stop_name')) {
+      let stop_name = urlParams.get('stop_name');
+      let stop = station_data.filter(d => d.stop_name == stop_name)[0];
+      let id = stop.id;
+      displayStation(id)
+    }
+  })
+
+});
 
 /**
  * END USER INTERACTION WITH FORM

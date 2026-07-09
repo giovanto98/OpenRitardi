@@ -10,6 +10,10 @@
             "item": "trains"
         },
         {
+            "url": "notte.html",
+            "item": "notte"
+        },
+        {
             "url": "statistics.html",
             "item": "statistics"
         },
@@ -49,6 +53,9 @@
                 </li>
                 {% endfor %}
                 <li>
+                    <span class="or-year-picker-mount uk-margin-small-right"></span>
+                </li>
+                <li>
                     <a href="{{ lang_url | url }}" >
                         <span class="uk-button uk-button-small uk-button-default">{{ lang }}</span>
                     </a>
@@ -71,6 +78,9 @@
                 </a>
             </li>
             {% endfor %}
+            <li>
+                <span class="or-year-picker-mount uk-margin-small-bottom" style="display:inline-block"></span>
+            </li>
             <li>
                 <a href="{{ lang_url | url }}" >
                     <span class="uk-button uk-button-small uk-button-default">{{ lang }}</span>

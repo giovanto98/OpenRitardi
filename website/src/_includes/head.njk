@@ -7,6 +7,11 @@
 <!-- Deploy path prefix, consumed by static JS (fetch/d3 "/data" and "/media" URLs) -->
 <script>window.OR_BASE = "{{ '/' | url }}";</script>
 
+<!-- Year picker: resolves window.OR_YEAR (+ window.OR_YEAR_READY promise) as early as
+     possible from ?year=, localStorage, then data/years.json, so every data-loading
+     script on the page can build "data/<year>/..." URLs without a race condition. -->
+<script src="{{ '/js/year-picker.js' | url }}"></script>
+
 <!-- UIkit CSS -->
 <link rel="stylesheet" href="{{ '/libraries/ui/uikit/theme.css' | url }}" />
 

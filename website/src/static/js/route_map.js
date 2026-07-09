@@ -31,10 +31,9 @@ function project(d) {
 }
 
 
-const data_stop = d3.csv(window.OR_BASE + "data/data_stop.csv", function (d) {
-  return d;
-})
-
+// trip_demo.txt is a static demo route, not year-scoped dataset content, so it
+// doesn't need OR_YEAR -- it's shown as a placeholder before a real train is
+// selected via trains_search.js (which does wait for window.OR_YEAR_READY).
 const data_route = d3.csv(window.OR_BASE + "data/trip_demo.txt", function (d) {
   return d;
 })

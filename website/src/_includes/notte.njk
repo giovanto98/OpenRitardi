@@ -1,0 +1,81 @@
+{% include 'template/header.njk' %}
+<!-- CONTENT -->
+<div class="uk-container uk-container-large uk-margin-large">
+    <h1>{{ "notte.title" | i18n }}</h1>
+    <div class="uk-container uk-container-small uk-margin-remove-left" style="margin-left:0">
+        <p class="uk-text-justify">{{ "notte.intro" | i18n | safe }}</p>
+        <p class="uk-text-meta">{{ "notte.maintained_by" | i18n | safe }}</p>
+    </div>
+
+    <!-- Headline stat tiles -->
+    <div uk-grid class="uk-child-width-1-3@s uk-grid-match uk-margin" id="notte-tiles">
+        <div>
+            <div class="uk-text-center uk-card uk-card-default uk-card-body">
+                <span class="uk-h1 uk-margin-small" id="notte-tile-n-trains">-</span>
+                <div class="uk-h4 uk-margin-small">{{ "notte.tile_n_trains" | i18n }}</div>
+            </div>
+        </div>
+        <div>
+            <div class="uk-text-center uk-card uk-card-default uk-card-body">
+                <span class="uk-h1 uk-margin-small" id="notte-tile-avg-delay">-</span>
+                <div class="uk-h4 uk-margin-small">{{ "notte.tile_avg_delay" | i18n }}</div>
+            </div>
+        </div>
+        <div>
+            <div class="uk-text-center uk-card uk-card-default uk-card-body">
+                <span class="uk-h1 uk-margin-small" id="notte-tile-perc-10m">-</span>
+                <div class="uk-h4 uk-margin-small">{{ "notte.tile_perc_10m" | i18n }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map of ICN routes, colored by delay -->
+    <div class="uk-margin">
+        <div class="uk-card uk-card-default uk-card-body">
+            <h3 class="uk-card-title">{{ "notte.map_title" | i18n }}</h3>
+            <div class="uk-inline uk-width-1-1">
+                <div id="icn-route-map" style="width:100%; height:500px;"></div>
+                <div class="map-overlay uk-position-bottom-right">
+                    <div class="map-overlay-inner" id="icn-legend"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table of all ICN trains, sortable -->
+    <div class="uk-margin">
+        <div class="uk-card uk-card-default">
+            <div class="uk-card-header">
+                <h3 class="uk-card-title">{{ "notte.table_title" | i18n }}</h3>
+            </div>
+            <div class="uk-card-body">
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-divider uk-table-hover uk-table-small ot-ranking-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">{{ "global.train_number" | i18n }}</th>
+                                <th width="35%">{{ "global.destination" | i18n }}</th>
+                                <th class="notte-sortable" data-sort-key="avg_arrival_delay" style="cursor:pointer">
+                                    {{ "global.average_delay" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span>
+                                </th>
+                                <th class="notte-sortable" data-sort-key="perc_10m_delay" style="cursor:pointer">
+                                    {{ "notte.table_perc_10m_header" | i18n }} <span uk-icon="icon: triangle-down; ratio: 0.6"></span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="notte-trains-table-body" data-no-data-message="{{ 'notte.no_data_for_year' | i18n }}">
+                            <tr>
+                                <td colspan="4" style="text-align:center">
+                                    <div uk-spinner></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ '/libraries/maps/legend.js' | url }}" type="text/javascript"></script>
+<script src="{{ '/js/notte.js' | url }}" type="text/javascript"></script>

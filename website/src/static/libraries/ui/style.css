@@ -109,6 +109,16 @@ p{
     z-index: 10000;
 }
 
+/* Year picker mounted in the header nav (both desktop and offcanvas copies) */
+.or-year-select {
+    width: auto;
+    max-width: 140px;
+    font-size: 90%;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 30px;
+}
+
 .uk-dropdown .uk-table-hover tr:hover {
     color: #223046;
 }

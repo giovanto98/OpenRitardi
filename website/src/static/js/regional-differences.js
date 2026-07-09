@@ -72,47 +72,50 @@ function getFileName(trainType) {
  */
 
 
-d3.select("#form-horizontal-select-trainType").on("change", function (d) {
-    var selectedOptionTrainType = d3.select(this).property("value")
-    var dataset = getFileName(selectedOptionTrainType)
-    console.log("Change dropdown, load", window.OR_BASE + "data/" + dataset)
-    const data_stop = d3.csv(window.OR_BASE + "data/" + dataset, function (d) {
-        return d;
-    })
-    Promise.all([data_stop]).then(results => {
-        regional_data = results[0];
-        plotRegions(regional_data, regional_polygons);
-    })
-})
-
-
-
-const data_stop = d3.csv(window.OR_BASE + "data/data_stop_region_class_IC.csv", function (d) {
-    return d;
-})
-
-const polygons_regions = d3.json(window.OR_BASE + "data/regions.geojson", function (d) {
-    return d;
-})
-
 var regional_data = []
 var regional_polygons = []
 
-Promise.all([data_stop, polygons_regions]).then(results => {
-    regional_data = results[0];
-    regional_polygons = results[1];
+window.OR_YEAR_READY.then(function () {
 
-    // augment the dataset with an ID
-    // we need an ID for each stop in order to be able to remove the popup when the user hovers out
-    let id = 0
-    regional_data = regional_data.map(d => {
-        d.id = id
-        id += 1
-        return d
-    });
+    d3.select("#form-horizontal-select-trainType").on("change", function (d) {
+        var selectedOptionTrainType = d3.select(this).property("value")
+        var dataset = getFileName(selectedOptionTrainType)
+        console.log("Change dropdown, load", window.OR_BASE + "data/" + window.OR_YEAR + "/" + dataset)
+        const data_stop = d3.csv(window.OR_BASE + "data/" + window.OR_YEAR + "/" + dataset, function (d) {
+            return d;
+        })
+        Promise.all([data_stop]).then(results => {
+            regional_data = results[0];
+            plotRegions(regional_data, regional_polygons);
+        })
+    })
 
-    plotRegions(regional_data, regional_polygons);
-})
+    // regions.geojson is a static shape file, not year-scoped dataset content
+    const data_stop = d3.csv(window.OR_BASE + "data/" + window.OR_YEAR + "/data_stop_region_class_IC.csv", function (d) {
+        return d;
+    })
+
+    const polygons_regions = d3.json(window.OR_BASE + "data/regions.geojson", function (d) {
+        return d;
+    })
+
+    Promise.all([data_stop, polygons_regions]).then(results => {
+        regional_data = results[0];
+        regional_polygons = results[1];
+
+        // augment the dataset with an ID
+        // we need an ID for each stop in order to be able to remove the popup when the user hovers out
+        let id = 0
+        regional_data = regional_data.map(d => {
+            d.id = id
+            id += 1
+            return d
+        });
+
+        plotRegions(regional_data, regional_polygons);
+    })
+
+});
 
 /**
  * END USER INTERACTION WITH FORM

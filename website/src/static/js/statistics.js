@@ -71,8 +71,9 @@ function generateBestWorst(data, sortProperty, generateHTML, bestElementId, wors
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const train_data = await d3.csv(window.OR_BASE + "data/data_train_index.csv");
-    const stop_data = await d3.csv(window.OR_BASE + "data/data_stop.csv");
+    await window.OR_YEAR_READY;
+    const train_data = await d3.csv(window.OR_BASE + "data/" + window.OR_YEAR + "/data_train_index.csv");
+    const stop_data = await d3.csv(window.OR_BASE + "data/" + window.OR_YEAR + "/data_stop.csv");
 
     generateBestWorst(train_data, 'median_arrival_delay', generateTrainHTML, 'best-trains', 'worst-trains');
 

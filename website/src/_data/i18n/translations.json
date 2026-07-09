@@ -192,6 +192,56 @@
             "it": "Ritardi a"
         }
     },
+    "notte": {
+        "menu_item": {
+            "en": "Night Trains",
+            "it": "Treni Notte"
+        },
+        "head_title": {
+            "en": "Intercity Notte - Italian night trains",
+            "it": "Intercity Notte - treni notturni italiani"
+        },
+        "title": {
+            "en": "Intercity Notte (ICN)",
+            "it": "Intercity Notte (ICN)"
+        },
+        "intro": {
+            "en": "Intercity Notte (ICN) are Trenitalia's overnight long-distance trains, connecting the north of Italy with Sicily and Calabria overnight. This page tracks their punctuality using the same open dataset as the rest of OpenRitardi, filtered to the ICN service class.",
+            "it": "Gli Intercity Notte (ICN) sono i treni notturni a lunga percorrenza di Trenitalia, che collegano il nord Italia con la Sicilia e la Calabria durante la notte. Questa pagina monitora la loro puntualità usando lo stesso dataset aperto del resto di OpenRitardi, filtrato sulla classe di servizio ICN."
+        },
+        "maintained_by": {
+            "en": "This page is maintained by <a href=\"https://back-on-track.eu\" target=\"_blank\">Back-on-Track Italia</a>.",
+            "it": "Questa pagina è curata da <a href=\"https://back-on-track.eu\" target=\"_blank\">Back-on-Track Italia</a>."
+        },
+        "tile_n_trains": {
+            "en": "ICN trains",
+            "it": "Treni ICN"
+        },
+        "tile_avg_delay": {
+            "en": "Avg. delay at destination",
+            "it": "Ritardo medio a destinazione"
+        },
+        "tile_perc_10m": {
+            "en": "> 10 min late",
+            "it": "> 10 min di ritardo"
+        },
+        "table_title": {
+            "en": "All ICN trains",
+            "it": "Tutti i treni ICN"
+        },
+        "table_perc_10m_header": {
+            "en": "% > 10 min late",
+            "it": "% > 10 min ritardo"
+        },
+        "map_title": {
+            "en": "ICN routes",
+            "it": "Percorsi ICN"
+        },
+        "no_data_for_year": {
+            "en": "No ICN data available for this year.",
+            "it": "Nessun dato ICN disponibile per questo anno."
+        }
+    },
     "about": {
         "menu_item": {
             "en": "About",

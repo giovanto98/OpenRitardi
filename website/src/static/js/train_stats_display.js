@@ -82,8 +82,10 @@ function displayTrainInformation(trainID) {
 
     searched_train_info_div.innerHTML = content;
 
-    // get the dataset of the train
-    let train_dataset = d3.csv(window.OR_BASE + 'data/trains/' + trainID + '.csv').then(function (data) {
+    // get the dataset of the train (window.OR_YEAR is already resolved by now:
+    // this function is only ever called after window.OR_YEAR_READY has settled,
+    // either via trains_search.js's initial load or via a later user click)
+    let train_dataset = d3.csv(window.OR_BASE + 'data/' + window.OR_YEAR + '/trains/' + trainID + '.csv').then(function (data) {
         return data
     });
 
@@ -95,7 +97,7 @@ function displayTrainInformation(trainID) {
 
     });
 
-    let train_shapes = d3.csv(window.OR_BASE + 'data/trains_shapes/' + trainID + '.csv').then(function (data) {
+    let train_shapes = d3.csv(window.OR_BASE + 'data/' + window.OR_YEAR + '/trains_shapes/' + trainID + '.csv').then(function (data) {
         return data
     });
 

@@ -38,7 +38,9 @@ function round(value, decimals) {
 
 
 
-dataset_dropdown = d3.csv(window.OR_BASE + 'data/data_train_index.csv').then(function (data) {
+dataset_dropdown = window.OR_YEAR_READY.then(function () {
+    return d3.csv(window.OR_BASE + 'data/' + window.OR_YEAR + '/data_train_index.csv');
+}).then(function (data) {
     dataset = data
     // keep only some columns
     dataset_dropdown = dataset.map(function (train) {
@@ -59,7 +61,7 @@ dataset_dropdown = d3.csv(window.OR_BASE + 'data/data_train_index.csv').then(fun
     let urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('train_id')) {
         let train_id = urlParams.get('train_id');
-        
+
         displayTrainInformation(train_id);
     } else {
         let train_class_default = "IC";
