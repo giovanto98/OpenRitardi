@@ -85,7 +85,7 @@
 
     <div class="open-button-container">
         <button onclick="onOpenClick(event)" class="open-button">
-            <img class="open-icon" src="/media/up_arrow_icon.svg">
+            <img class="open-icon" src="{{ '/media/up_arrow_icon.svg' | url }}">
             <div class="open-button-text">Open</div>
         </button>
     </div>
@@ -105,12 +105,12 @@
     }
 </script>
 
-<script src="/js/home_mobile_script.js" type="text/javascript"></script>
+<script src="{{ '/js/home_mobile_script.js' | url }}" type="text/javascript"></script>
 
 
 </div>
 
 
-<script src="/js/autocomplete.js" type="text/javascript"></script>
-<script src="/libraries/maps/legend.js" type="text/javascript"></script>
-<script src="/js/stations_map_mapbox.js" type="text/javascript"></script>
+<script src="{{ '/js/autocomplete.js' | url }}" type="text/javascript"></script>
+<script src="{{ '/libraries/maps/legend.js' | url }}" type="text/javascript"></script>
+<script src="{{ '/js/stations_map_mapbox.js' | url }}" type="text/javascript"></script>

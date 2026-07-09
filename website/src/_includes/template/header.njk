@@ -36,7 +36,7 @@
         <div class=" uk-container uk-container-medium">
     <nav class="uk-navbar" uk-navbar="" style="max-width: 1500px; margin:0 auto">
         <div class="uk-navbar-left"><a class="uk-navbar-item uk-logo" href="index.html" aria-label="Back to Home"><img
-                    src="/media/logo/logo.png" class="header-logo uk-margin-small-right" alt="UIkit"
+                    src="{{ '/media/logo/logo.png' | url }}" class="header-logo uk-margin-small-right" alt="UIkit"
                     style="height:90px; margin-bottom:10px; margin-top:10px">
             </a></div>
         <div class="uk-navbar-right">
@@ -49,7 +49,7 @@
                 </li>
                 {% endfor %}
                 <li>
-                    <a href="{{ lang_url }}" >
+                    <a href="{{ lang_url | url }}" >
                         <span class="uk-button uk-button-small uk-button-default">{{ lang }}</span>
                     </a>
                 </li>
@@ -72,7 +72,7 @@
             </li>
             {% endfor %}
             <li>
-                <a href="{{ lang_url }}" >
+                <a href="{{ lang_url | url }}" >
                     <span class="uk-button uk-button-small uk-button-default">{{ lang }}</span>
                 </a>
             </li>

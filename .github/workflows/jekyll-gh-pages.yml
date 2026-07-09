@@ -38,6 +38,10 @@ jobs:
         run: npm --prefix website install 
       - name: Build NodeJS website
         run: npm --prefix website run build
+        env:
+          # Project page served from a subpath (https://<user>.github.io/OpenRitardi/).
+          # eleventy.config.js falls back to "/" when unset, so a custom-domain/root build is unaffected.
+          PATH_PREFIX: /OpenRitardi/
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:

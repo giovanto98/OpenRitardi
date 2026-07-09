@@ -16,6 +16,9 @@ const translations = require('./src/_data/i18n');
 // load custom filters
 const customFilters = require('./src/_data/custom-filters.js')
 
+// Deploy target base path (e.g. GitHub Pages project page "/OpenRitardi/").
+// Defaults to "/" so a custom-domain / upstream build at the domain root is unaffected.
+const pathPrefix = process.env.PATH_PREFIX || "/";
 
 module.exports = function (eleventyConfig) {
 
@@ -35,6 +38,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("makeHeadTitle", customFilters.headTitle);
 
   return {
+    pathPrefix,
     dir: {
       input: "src",
       output: "dist",

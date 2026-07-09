@@ -1,30 +1,32 @@
 <meta charset="UTF-8">
-<link rel="icon" type="image/x-icon" href="/media/logo/favicon.png">
+<link rel="icon" type="image/x-icon" href="{{ '/media/logo/favicon.png' | url }}">
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+<!-- Deploy path prefix, consumed by static JS (fetch/d3 "/data" and "/media" URLs) -->
+<script>window.OR_BASE = "{{ '/' | url }}";</script>
 
 <!-- UIkit CSS -->
-<link rel="stylesheet" href="/libraries/ui/uikit/theme.css" />
+<link rel="stylesheet" href="{{ '/libraries/ui/uikit/theme.css' | url }}" />
 
 <!-- UIkit JS -->
-<script src="/libraries/ui/uikit/theme.js"></script>
+<script src="{{ '/libraries/ui/uikit/theme.js' | url }}"></script>
 {# <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit-icons.min.js"></script> #}
-<script src="/libraries/ui/uikit/uikit-icons.min.js"></script>
+<script src="{{ '/libraries/ui/uikit/uikit-icons.min.js' | url }}"></script>
 
 
 <!-- D3.js -->
 {# <script src="https://d3js.org/d3.v7.min.js"></script> #}
-<script src="/libraries/ui/d3.v7.min.js"></script>
+<script src="{{ '/libraries/ui/d3.v7.min.js' | url }}"></script>
 
 <!-- JQuery -->
 {# <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script> #}
-<script src="/libraries/ui/jquery-3.7.0.min.js"></script>
+<script src="{{ '/libraries/ui/jquery-3.7.0.min.js' | url }}"></script>
 
 <!-- Mapbox -->
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="/libraries/ui/style.css">
+<link rel="stylesheet" href="{{ '/libraries/ui/style.css' | url }}">

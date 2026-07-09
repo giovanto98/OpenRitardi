@@ -17,16 +17,16 @@ function generateDelayString(delay) {
 
 function trainClassToImage(train_class) {
     const trainImages = {
-        "IC": "/media/intercity.svg width='80px'",
-        "ICN": "/media/intercity_notte.svg width='80px'",
-        "REG": "/media/RE.svg",
-        "EC": "/media/EC.svg",
-        "FR": "/media/frecciarossa.svg width='80px'",
-        "FB": "/media/frecciabianca.svg width='80px'",
-        "FA": "/media/frecciargento.svg width='80px'"
+        "IC": window.OR_BASE + "media/intercity.svg width='80px'",
+        "ICN": window.OR_BASE + "media/intercity_notte.svg width='80px'",
+        "REG": window.OR_BASE + "media/RE.svg",
+        "EC": window.OR_BASE + "media/EC.svg",
+        "FR": window.OR_BASE + "media/frecciarossa.svg width='80px'",
+        "FB": window.OR_BASE + "media/frecciabianca.svg width='80px'",
+        "FA": window.OR_BASE + "media/frecciargento.svg width='80px'"
     };
 
-    return trainImages[train_class] || "/media/logo/favicon.png";
+    return trainImages[train_class] || window.OR_BASE + "media/logo/favicon.png";
 }
 
 const trainClicked = (train_id) => window.location.href = "trains.html?train_id=" + train_id;
@@ -71,8 +71,8 @@ function generateBestWorst(data, sortProperty, generateHTML, bestElementId, wors
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const train_data = await d3.csv("/data/data_train_index.csv");
-    const stop_data = await d3.csv("/data/data_stop.csv");
+    const train_data = await d3.csv(window.OR_BASE + "data/data_train_index.csv");
+    const stop_data = await d3.csv(window.OR_BASE + "data/data_stop.csv");
 
     generateBestWorst(train_data, 'median_arrival_delay', generateTrainHTML, 'best-trains', 'worst-trains');
 
